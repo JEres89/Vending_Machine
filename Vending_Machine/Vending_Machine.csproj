@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Vending_Machine</RootNamespace>
+    <IsPublishable>False</IsPublishable>
+    <StartupObject>Vending_Machine.Program</StartupObject>
+  </PropertyGroup>
+
+</Project>
