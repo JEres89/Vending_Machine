@@ -28,17 +28,10 @@ namespace Vending_Machine
 			
 			else return null;
 		}
-
-
-
-		//protected VendingItem(int cost, string name, string description, string useEvent, bool consumable)
-		//{
-		//	this.cost = cost;
-		//	this.name = name;
-		//	this.description = description;
-		//	this.useEvent = useEvent;
-		//	this.consumable = consumable;
-		//}
+		public static VendingItem SampleItem(Type itemType)
+		{
+			return catalogue.Find(x => x.GetType() == itemType);
+		}
 
 		public int Examine()
 		{

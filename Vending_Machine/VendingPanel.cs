@@ -55,10 +55,7 @@ namespace Vending_Machine
 			UpdateSlotInfo();
 			list_rowEnd = list_rowStart + slotStrings.Length * 2 + padding;
 
-			Console.ReadKey(true);
-
 			int selection = 0;
-			
 
 			while (true)
 			{
@@ -242,17 +239,18 @@ namespace Vending_Machine
 		}
 		private string[] Stringify((Type itemType, int n)[] slots)
 		{
-			string itemLine = "| {0}. {4} {1}{2} - Stock: {3} |";
+			string itemLine = "| {0}. {5} {1}{2}{3}kr - Stock: {4} |";
 			string[] slotStrings = new string[slots.Length];
 
 			for (int i = 0; i < slots.Length; i++)
 			{
-				string itemName = VendingItem.GetItem(slots[i].itemType, true).name;
-				int padding = 15 - (itemName.Length < 15 ? itemName.Length : 15);
+				VendingItem item = VendingItem.SampleItem(slots[i].itemType);
+				int padding = 15 - (item.name.Length < 13 ? item.name.Length : 13) - item.cost.ToString().Length;
 
-				slotStrings[i] = string.Format(itemLine, i + 1, itemName, new string(' ', padding), slots[i].n, "{0}");
-				/**/
-				Console.Write(slotStrings[i].Length + " ");/**/
+				slotStrings[i] = string.Format(itemLine, i + 1, item.name, new string(' ', padding), item.cost, slots[i].n, "{0}");
+				/**
+				Console.Write(slotStrings[i].Length + " ");
+				Console.ReadKey(true);/**/
 			}
 			return slotStrings;
 		}
