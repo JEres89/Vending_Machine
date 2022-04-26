@@ -9,6 +9,10 @@ namespace Vending_Machine
 	{
 		readonly I_Vending machine;
 
+		private const string instructions = "Instructions: Use ARROWKEYS UP and DOWN to navigate the list,\n" +
+				"LEFT and RIGHT to switch access to and from the money slot and end transaction button,\n" +
+				"and ENTER to select the highlighted choice.";
+
 		private static int padding = 2;
 		private static int panel_end;
 
@@ -56,7 +60,8 @@ namespace Vending_Machine
 			list_rowEnd = list_rowStart + slotStrings.Length * 2 + padding;
 
 			int selection = 0;
-
+			ConsoleKey key = ConsoleKey.NoName;
+			bool keyIsValid = false;
 			while (true)
 			{
 				Console.Clear();
@@ -65,8 +70,10 @@ namespace Vending_Machine
 				while (!hasSelected)
 				{
 					DrawPanel(slotStrings, selection);
-					ConsoleKeyInfo key = Console.ReadKey();
+					if(!keyIsValid) key = Console.ReadKey(true).Key;
+
 					hasSelected = Navigate(key, slots.Length, selection, out selection);
+					keyIsValid = false;
 				}
 
 				Console.SetCursorPosition(0, panel_end);
@@ -78,7 +85,8 @@ namespace Vending_Machine
 							UpdateSlotInfo();
 							selection = selection >= slots.Length ? slots.Length-1 : selection;
 						}
-						Console.ReadKey();
+						key = Console.ReadKey(true).Key;
+						keyIsValid = true;
 						break;
 					case endTransaction:
 						customerWallet.AddMoney(ReturnMoney());
@@ -136,8 +144,8 @@ namespace Vending_Machine
 				while (!hasSelected)
 				{
 					DrawWallet(moneyStrings.ToArray(), selection);
-					ConsoleKeyInfo key = Console.ReadKey();
-					if (acceptableInput.Contains(key.Key))
+					ConsoleKey key = Console.ReadKey().Key;
+					if (acceptableInput.Contains(key))
 					{
 						hasSelected = Navigate(key, moneyStrings.Count + 1, selection, out selection);
 					}
@@ -183,15 +191,15 @@ namespace Vending_Machine
 			DrawAt("| Balance |", x, y++);
 
 			string s = string.Format(
-				"|{1}{0}kr |",
+				"|{1}{0} kr |",
 				machine.Balance(),
-				new string(' ', 6 - machine.Balance().ToString().Length));
+				new string(' ', 5 - machine.Balance().ToString().Length));
 			DrawAt(s, x, y++);
 			DrawAt("|_________|", x, y++);
 
 			x = money_columnStart;
 			y = money_rowStart;
-			selector = selection == insertMoney ? "- - - - - -" : new string(' ', 11);
+			selector = selection == insertMoney ? "===========" : new string(' ', 11);
 			DrawAt(selector, x, y++);
 			DrawAt("/---------\\", x, y++);
 			DrawAt("|   (|)   |", x, y++);
@@ -202,7 +210,7 @@ namespace Vending_Machine
 
 			x = abort_columnStart;
 			y = abort_rowStart;
-			selector = selection == endTransaction ? "- - - -" : new string(' ', 7);
+			selector = selection == endTransaction ? "=======" : new string(' ', 7);
 			DrawAt(selector, x - 1, y++);
 			DrawAt(",---,", x, y++);
 			DrawAt("| X |", x, y++);
@@ -210,6 +218,9 @@ namespace Vending_Machine
 			DrawAt(selector, x - 1, y++);
 
 			panel_end = y + padding;
+
+			DrawAt(instructions, 0, panel_end+3);
+
 		}
 		private void DrawWallet(string[] moneyStrings, int selection)
 		{
@@ -255,12 +266,12 @@ namespace Vending_Machine
 			return slotStrings;
 		}
 
-		private bool Navigate(ConsoleKeyInfo key, int max, int selection, out int newSelection)
+		private bool Navigate(ConsoleKey key, int max, int selection, out int newSelection)
 		{
-			newSelection = selection;
+			newSelection = selection; 
 			bool select = false;
 
-			switch (key.Key)
+			switch (key)
 			{
 				case ConsoleKey.Enter:
 					select = true;

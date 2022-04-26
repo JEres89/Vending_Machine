@@ -27,7 +27,7 @@ namespace Vending_Machine
 
 				Console.Clear();
 				Console.WriteLine("You have a {0}. It's worth {1}.", active.Value.name, active.Value.cost);
-				Console.WriteLine("Would you like to use it? (Y)");
+				Console.WriteLine("\nWould you like to use it? (Y)");
 				Console.WriteLine("<- {0}                                 {1} ->", previous.Value.name, next.Value.name);
 				Console.WriteLine("Exit (X)");
 
